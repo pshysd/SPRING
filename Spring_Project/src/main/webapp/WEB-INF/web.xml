@@ -42,9 +42,10 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>1</load-on-startup> <!-- DispatcherServlet이 읽어들여야 할 파일의 우선순위가 1순위 -->
 	</servlet>
-		
+	
+	<!-- 모든 요청을 우선적으로 DispatcherServlet으로 보내겠다. -->
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
