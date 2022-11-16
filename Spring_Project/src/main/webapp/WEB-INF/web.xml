@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- 
+		* web.xml 파일
+		배포서술자라고도 부른다. 서버가 구동될 때 제일 먼저 읽히는 파일
+		즉, 복잡한 스프링의 환경설정 파일들 중에 가장 먼저 읽히는 파일
+		-> 서버가 알아야 할 가장 기본적인 설정은 이 파일에 기술되어있어야만 한다.
+	 -->
+	 
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<!-- 스프링의 최상위 설정 파일(root-context.xml)의 경로를 지정한 부분 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<!-- 모든 설정 파일을 연결할 수 있는 도구(== bean == 자바 객체)를 등록한 부분 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<!-- 
+		웹 사이트의 요청 처리를 어떻게 할건지 등록한 부분
+		즉, 요청을 처리하는 메인 서블릿을 등록한 부분 (무조건 있어야 함)
+		-> 해당 서블릿 명: DispatcherServlet
+		
+		* 스프링에서는 내가 직접 서블릿을 만들 필요가 없음
+		알게모르게 스프링 내부에는 중앙 처리 요청을 해주는 서블릿이 존재
+		모든 요청은 그 중앙 처리 요청을 해주는 서블릿을 거쳐가기 마련
+	-->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		
+		<!-- DispatcherServlet과 관련된 추가 설정에 대한 내용을 등록한 부분 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>

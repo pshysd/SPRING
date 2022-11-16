@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	<!-- 
+		* servlet-context.xml 파일
+		스프링의 가장 핵심 부품인 DispatcherServlet과 관련된 설정을 기술하는 파일
+		즉, 요청에 대한 환경설정을 주로 기술한다.
+		
+		* servlet-context.xml 파일의 설정 방법
+		접두어:태그명 -> xmlns: 접두어로 등록된 태귿르만 사용 가능
+						 mvc: 는 생략가능함(2번 행에 적혀있음)
+	-->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	
+	<!-- 
+		 @Controller와 같은 어노테이션을 사용할 수 있게 해주는 설정 (어노테이션을 사용할 수 있게 활성화해주겠다)
+		 
+		 이 설정을 해야만 하는 이유: 스프링이 알아서 객체로 만들어서 관리해줄 수 있또록 해주는 방법 중 하나이기 때문
+		 
+		 * 스프링에서 bean 등록 방법
+		 1. xml 파일로 등록: 내가 직접 코드를 수정하거나 볼 수 없는 클래스일 경우 (jar 파일에 있는 클래스를 객체로 만들고 싶을 경우)
+		 2. 어노테이션을 붙여서 등록: 내가 직접 만든 클래스일 경우 (Controller, Service, Dao, ...)
+	-->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	
+	<!-- 
+		 webapp/resources 폴더에 대한 경로 설정
+		 -> webapp/resources: 정적 외부 자원에 대해서 보관하는 폴더	(이미지, css, js, 폰트, ...)
+		 
+		 - mapping: resources 폴더 내부의 모든 폴더, 파일에 대해서 접근할 주소 지정
+		 - location: 파일의 실제 위치
+		 
+		 이 설정을 하면 DispatcherServlet을 거치지 않고 곧바로 url 주소상으로 해당 파일을 열람할 수 있다.
+	-->
+	
+	<resources mapping="/resources/**" location="/resources/" />
+
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<!-- 
+		주소 자동 완성 도구에(View Resolver) 대한 설정
+		
+		이 설정을 해야하는 이유: 응답페이지 "포워딩" 시 필요함 (request.getRequestDispatcher().forward();
+		-> 응답 페이지명을 작성하면 바로 해당 페이지를 찾아서 포워딩 시켜준다.
+		
+		- prefix: 접두어 (/WEB-INF/views/) 
+		- suffix: 접미어 (.jsp)
+		
+		"/WEB-INF/views/" + 페이지명 + ".jsp"
+	-->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	<!-- 
+		 내부적으로
+		 InternalResourceVIewResolver internalResourceViewResolver = new InternalResourceViewResolver();
+		 internalResourcesViewResolver.setPrefix("/WEB-INF/views/");
+		 internalResourcesViewResolver.setSuffix(".jsp");
+	-->
+	
+	<!-- 
+		 위에서 설정한 annotation-driven 태그와 짝꿍인 설정
+		 
+		 base-package 속성에서 설정된 패키지와 그 하위에 있는 모든 패키지를 감시하겠다.
+		 base-package 속성에서 설정된 패키지 내부에 있는 모든 클래스에 대해서 어노테이션이 붙은 클래스들은 자동으로 다 bean으로 등록하곘다
+	-->
+	
+	<context:component-scan base-package="com.kh.spring" />
+	
+	<!-- 
+		 * Spring에서는 객체 생성 주도권이 Spring에게 있음
+		 객체를 생성한다 == bean을 등록한다 == 도구를 추가하겠다.
+		 
+		 내부적으로 만들어진 도구(bean)를 보관할 수 있는 창고를 가지고 있음
+		 :스프링컨테이너(Spring Container)
+		 -> Spring에 의해 생성된 객체들은 Spring Container에 담겨있다.
+	-->
+</beans:beans>

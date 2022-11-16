@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- 
+		* root-context.xml 파일
+		서버 구동과 동시에 읽히는 web.xml 파일 다음으로 읽히는 문서 (2번째로 읽힘)
+		서버 구동 직후에 바로 세팅해야하는 내용들을 기술하는 공간
+		ex) DB 연동 설정, 트랜잭션 처리 설정, 내외부 모듈 설정, ...
+		
+		* root-context.xml 파일의 설정 방법
+		beans 태그로 감싸져있음 -> 내부에 bean 태그들 작성
+		bean: "도구" (자바 객체)
+			  그동안은 자바 객체가 필요할 경우 일일이 new ~ 구문을 이용해서 객체를 생성해줬음
+			  이제는 스플이이 알아서 객체를 생성해주고 관리할 수 있게
+			  어느 타입의(자바 클래스) 어느 이름의 객체(객체명)를 앞으로 사용할건지 작성
+	-->
+</beans>
