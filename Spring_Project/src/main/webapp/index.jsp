@@ -38,6 +38,6 @@
 		7. PSA(Portable Service Abstraction)
 			스프링에서는 수많은 모듈들을 붙여 쓸 수 있는데 일일이 연동해주는 게 아니라 모듈만 바꿔치기 해서 사용할 수 있게끔 도와주겠다.
 	-->
-	여기는 index.jsp야
+	<jsp:forward page="WEB-INF/views/main.jsp" />
 </body>
 </html>
