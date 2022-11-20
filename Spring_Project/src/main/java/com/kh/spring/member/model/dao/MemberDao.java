@@ -19,4 +19,8 @@ public class MemberDao {
 		// 로그인 == 단일행 조회
 		return sqlSession.selectOne("memberMapper.loginMember",m);
 	}
+
+	public int insertMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.insert("memberMapper.insertMember",m);
+	}
 }

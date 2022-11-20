@@ -3,6 +3,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.spring.member.model.dao.MemberDao;
 import com.kh.spring.member.model.vo.Member;
 // @Component
 @Service //Service 역할을 하는 bean으로 등록
@@ -14,6 +15,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberDao mDao;
+	
 	@Override
 	public Member loginMember(Member m) {
 		
@@ -30,13 +32,26 @@ public class MemberServiceImpl implements MemberService {
 		 * 
 		 */
 		
+		/*
+		 * 순수 MYBATIS에서는 SqlSession 객체가 필요
+		 * 스프링에서 MYBATIS를 쓰려면 SqlSessionTemplate 객체가 필요
+		 * -> root.context.xml에서 bean으로 등록했었음
+		 * -> 내가 직접 new 구문을 통해 객체를 생성할 필요가 없음 (@Autowired 사용)
+		 */
 		
-		return null;
+		Member loginUser = mDao.loginMember(sqlSession, m);
+		
+//		SqlSessionTemplate 객체를 bean으로 등록 후 @Autowired 해줌으로써
+//		Spring이 해당 객체를 생성해서 사용 후 자동으로 객체를 알아서 반납시켜주기 때문에
+//		내가 직접 close를 사용하여 자원을 반납할 필요 x
+		
+		return loginUser;
 	}
 
 	@Override
 	public int insertMember(Member m) {
-		return 0;
+		
+		return mDao.insertMember(sqlSession, m);
 	}
 
 	@Override

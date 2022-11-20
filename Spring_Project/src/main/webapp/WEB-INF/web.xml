@@ -14,7 +14,9 @@
 	<!-- 스프링의 최상위 설정 파일(root-context.xml)의 경로를 지정한 부분 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-value>/WEB-INF/spring/root-context.xml
+					 /WEB-INF/spring/spring-security.xml
+		</param-value>
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -51,4 +53,49 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	<!-- 
+		* 필터
+		모든 요청 처리 전 공통적으로 필요로 하는 기능들을
+		클라이언트의 요청을 Servlet이 받기 전에 머저 가로채서 해당 작성된 내용이 먼저 수행되도록 하는 개념
+		
+		* 스프링에서 제공해주는 인코딩 필터를 등록
+		경로: spring-web.x.x.xx.jar 파일의
+			  org.springframework.web.filter.CharacterEncodingFilter.class 파일
+		-> 필터 등록시 filter 태그와 filter-mapping 태그를 같이 기술	
+	-->
+	
+	<filter>
+		<!-- 반드시 filter-name으로 filter 명을 지정해야 한다. -->
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<!-- 옵선1. 인코딩 방식을 지정 (UTF-8) -->
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>	
+		</init-param>
+		<!-- 옵션2. 혹시나 충돌 시 강제로 인코딩을 UTF-8로 할 수 있게끔 지정 -->
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- 이 필터를 언제 적용하겠다. -->
+	<filter-mapping>
+			<!-- 위에서 지정한 encodingFilter를 모든 요청에 적용하겠다. -->
+			<filter-name>encodingFilter</filter-name>
+			<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!--
+		* /, /*, /** 차이점
+		/: url 매핑값
+		ex) AAA/: AAA(o), AAA/BBB(x)
+			
+		/*: 경로의 바로 하위 경로 매핑
+		ex) AAA/*: AAA/BBB, AAA/CCC (o), /AAA/BBB/CCC (x)
+		
+		/**: 경로의 모든 하위 경로 매핑
+		ex) AAA/**: AAA/BBB, AAA/BBB/CCC, (o)
+	-->
 </web-app>

@@ -63,6 +63,14 @@
 </head>
 <body>
 
+	<c:if test="${!empty sessionScope.alertMsg}">
+	<!-- 액션 태그의 특징: script 태그 영역에서 사용 불가(인식이 안됨) -->
+	<script>
+		alert('${alertMsg}');
+	</script>
+		<c:remove var="alertMsg" scope="session" />
+	</c:if>
+	
     <div id="header">
         <div id="header_1">
             <div id="header_1_left">
@@ -73,14 +81,14 @@
             
                 <c:choose>
                 	<c:when test="${empty loginUser}">
-    	            <a href="">회원가입</a>
+    	            <a href="enrollForm.me">회원가입</a>
         	        <a data-toggle="modal" data-target="#loginModal">로그인</a> 
         	        </c:when>
         	        
         	        <c:otherwise>
         	        	<label>${loginUser.userName}님 환영합니다.</label> &nbsp;&nbsp;
         	        	<a href="">마이페이지</a>
-                    	<a href="">로그아웃</a>
+                    	<a href="logout.me">로그아웃</a>
         	        </c:otherwise>
                 </c:choose>
             </div>
