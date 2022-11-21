@@ -180,27 +180,54 @@ public class MemberController {
 	@RequestMapping("login.me")
 	public ModelAndView loginMember(Member m, ModelAndView mv, HttpSession session) {
 
+//		암호화 작업 후 로직
+//		-> BCrypt 방식에 의해 복호화가 불가능한 암호문 형태의 비밀번호와 일치하는지 대조작업
+//		Member m의 userId 필드: 사용자가 입력한 아이디 (평문)
+//				   userPwd 필드: 사용자가 입력한 비밀번호 (평문)
 		Member loginUser = mService.loginMember(m);
+//		loginUser: 오로지 아이디만 가지고 조회된 회원의 정보
+//		Member loginUser의 userPwd 필드: DB에 기록된 암호화된 비밀번호
 
-		if (loginUser == null) { // 실패
+//		BCryptPasswordEncoder 객체의 matches 메소드
+//		matches(평문, 암호문)을 작성하면 내부적으로 평문과 암호문을 맞추는 작업이 이루어짐
+//		두 구문이 일치하는지 비교 후 일치하면 true 반환
+		if (loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
 
-//			model.addAttribute("errorMsg", "로그인 실패");
-			mv.addObject("errorMsg", "로그인 실패");
-
-//			return "common/errorPage";
-			mv.setViewName("common/errorPage");
-//			ModelAndView 객체를 이용해서 응답 페이지를 지정할 경우에도
-//			ViewResolver에 의해 접두어와 접미어를 생략한 형태로 지정해야만 한다.
-
-		} else { // 성공
-
-//			session.setAttribute("loginUser", loginUser);
+//			비밀번호도 일치한다면 -> 로그인 성공
 			session.setAttribute("loginUser", loginUser);
-//			return "redirect:/";
+
+			session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+
 			mv.setViewName("redirect:/");
+
+		} else {
+//			로그인 실패
+			mv.addObject("errorMsg", "로그인실패");
+//			/WEB-INF/views/common/errorPage.jsp
+			mv.setViewName("common/errorPage");
 		}
 
 		return mv;
+		/*
+		 * 암호화 작업 전 로직 Member loginUser = mService.loginMember(m);
+		 * 
+		 * if (loginUser == null) { // 실패
+		 * 
+		 * // model.addAttribute("errorMsg", "로그인 실패"); mv.addObject("errorMsg",
+		 * "로그인 실패");
+		 * 
+		 * // return "common/errorPage"; mv.setViewName("common/errorPa`ge"); //
+		 * ModelAndView 객체를 이용해서 응답 페이지를 지정할 경우에도 // ViewResolver에 의해 접두어와 접미어를 생략한 형태로
+		 * 지정해야만 한다.
+		 * 
+		 * } else { // 성공
+		 * 
+		 * // session.setAttribute("loginUser", loginUser);
+		 * session.setAttribute("loginUser", loginUser); // return "redirect:/";
+		 * mv.setViewName("redirect:/"); }
+		 * 
+		 * return mv;
+		 */
 	}
 
 	@RequestMapping("logout.me")
@@ -243,7 +270,6 @@ public class MemberController {
 //		2) BCryptPasswordEncoder 클래스를 xml 파일에 bean 등록
 //		3) web.xml에 spring-security.xml 파일을 로딩할 수 있게 등록
 
-		
 		String encPwd = bcryptPasswordEncoder.encode("암호문: " + m.getUserPwd());
 //		-> 같은 평문이여도 매번 다른 암호문 결과가 나옴
 //		-> 평문 + salt(랜덤값) -> 암호화 작업이 이루어지기 때문
@@ -262,6 +288,76 @@ public class MemberController {
 			model.addAttribute("errorMsg", "회원가입 실패");
 
 			return "common/errorPage";
+		}
+	}
+
+	@RequestMapping("myPage.me")
+	public String myPage() {
+
+		return "member/myPage";
+	}
+
+	@RequestMapping("update.me")
+	public String updateMember(Member m, Model model, HttpSession session) {
+
+//		System.out.println(m);
+
+		int result = mService.updateMember(m);
+
+		if (result > 0) { // 성공
+
+//			수정 성공일 경우 DB로부터 수정된 회원의 정보를 다시 조회해서
+//			session에 loginUser 키값으로 덮어씌워야 한다.
+//			-> 이 때, 기존의 loginMember 메소드를 재활용해서 조회해온다.
+
+			Member updateMem = mService.loginMember(m);
+
+			session.setAttribute("loginUser", updateMem);
+
+//			session에 일회성 알람 문구도 담기
+			session.setAttribute("alertMsg", "수정이 완료되었습니다.");
+
+			return "redirect:/";
+		} else { // 실패
+			model.addAttribute("errorMsg", "회원정보 변경 실패");
+
+			return "common/errorPage";
+		}
+	}
+
+	@RequestMapping("delete.me")
+	public String deleteMember(String userPwd, String userId, HttpSession session, Model model) {
+
+//		userPwd: 회원탈퇴 요청 시 사용자가 입력했던 평문 비밀번호
+//		session의 loginUser.userPwd: 현재 로그인한 회원의 암호화된 비밀번호
+//		-> 이 두가지 정보가 있어야만 matches 메소드 활용 가능
+
+		String encPwd = ((Member) session.getAttribute("loginUser")).getUserPwd();
+
+//		비밀번호 대조작업
+		if (bcryptPasswordEncoder.matches(userPwd, encPwd)) {
+
+//			비밀번호가 맞을 경우 -> 탈퇴처리
+
+			int result = mService.deleteMember(userId);
+
+			if (result > 0) { // 성공
+
+//				로그아웃 처리 후 일회성 알람 메시지 담기, 메인 페이지로 url 재요청
+				session.removeAttribute("loginUser");
+				session.setAttribute("alertMsg", "그동안 이용해주셔서 감사합니다.");
+
+				return "redirect:/";
+			} else { // 실패
+				model.addAttribute("errorMsg", "회원탈퇴 실패");
+
+				return "common/errorPage";
+			}
+		} else {
+//			비밀번호가 틀렸을 경우 -> 비밀번호가 틀렸다고 알려주고 마이페이지로 url 재요청
+			session.setAttribute("alertMsg", "비밀번호가 다릅니다.");
+
+			return "redirect:myPage.me";
 		}
 	}
 }

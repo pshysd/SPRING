@@ -20,11 +20,21 @@
 	
 	<!-- 로그인용 쿼리문 -->
 	<select id="loginMember" parameterType="member" resultMap="memberResultSet">
+	<!-- 암호화 작업 전
 	SELECT *
 	FROM MEMBER
 	WHERE USER_ID = #{userId}
 	AND USER_PWD = #{userPwd}
 	AND STATUS = 'Y'
+	-->
+	<!-- 암호화 작업 후: 
+	평문이 같더라도 매번 암호문이 다르게 나오기 때문에 비밀번호 관련 일치 조건을 기술 불가 
+	-> 오로지 아이디만으로 회원을 조회 (PK)
+	-->
+	SELECT *
+	FROM MEMBER
+	WHERE USER_ID = #{userId}
+	AND	STATUS = 'Y'
 	</select>
 
 	<!-- 회원가입용 쿼리문 -->
@@ -46,4 +56,23 @@
 						#{phone},
 						#{address})
 	</insert>
+	
+	<update id="updateMember" parameterType="member">
+	UPDATE MEMBER
+	   SET USER_NAME = #{userName},
+		   EMAIL = #{email},
+		   AGE = #{age},
+		   PHONE = #{phone},
+		   ADDRESS = #{address},
+ 	 	   GENDER = #{gender},
+ 		   MODIFY_DATE = SYSDATE
+	 WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="deleteMember" parameterType="string" >
+	UPDATE MEMBER
+	   SET STATUS = 'N',
+	   	   MODIFY_DATE = SYSDATE
+	 WHERE USER_ID = #{userId}
+	</update>
 </mapper>
