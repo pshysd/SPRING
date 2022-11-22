@@ -28,5 +28,47 @@
 		   ORIGIN_NAME
 	  FROM BOARD
      WHERE STATUS = 'Y'
+     ORDER BY BOARD_NO DESC
 	</select>
+	
+	<insert id="insertBoard" parameterType="board">
+	INSERT INTO BOARD (BOARD_NO,
+					   BOARD_TITLE,
+					   BOARD_WRITER,
+					   BOARD_CONTENT,
+					   ORIGIN_NAME,
+					   CHANGE_NAME)
+	   		   VALUES (SEQ_BNO.NEXTVAL,
+	   				   #{boardTitle},
+	   				   #{boardWriter},
+	   				   #{boardContent},
+	   				   #{originName},
+	   				   #{changeName})
+	</insert>
+	
+	<update id="increaseCount" parameterType="_int">
+	UPDATE BOARD
+	   SET COUNT = COUNT + 1
+   	 WHERE BOARD_NO = #{boardNo}
+   	   AND STATUS = 'Y'
+	</update>
+	
+	<select id="selectBoard" resultMap="boardResultSet" parameterType="_int">
+	SELECT BOARD_NO,
+		   BOARD_TITLE,
+		   BOARD_WRITER,
+		   TO_CHAR(CREATE_DATE,'YYYY-MM-DD') AS "CREATE_DATE",
+		   BOARD_CONTENT,
+		   COUNT,
+		   ORIGIN_NAME,
+		   CHANGE_NAME
+	FROM BOARD
+	WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="deleteBoard" parameterType="_int">
+	UPDATE BOARD
+	   SET STATUS = 'N'
+	 WHERE BOARD_NO = #{boardNo}
+	</update>
 </mapper>

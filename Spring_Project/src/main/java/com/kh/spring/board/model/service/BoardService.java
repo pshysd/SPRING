@@ -24,14 +24,16 @@ public interface BoardService {
 	int increaseCount(int boardNo);
 	
 //	게시글 상세조회 요청
-	Board selectboard(int boardNo);
+	Board selectBoard(int boardNo);
 	
 //	게시글 삭제 서비스
 	int deleteBoard(int boardNo);
 	
 //	게시글 수정 서비스
-	int updateBoard(int boardNo);
+	int updateBoard(Board b);
 	
+//	게시글 작성 서비스
+	int insertBoard(Board b);
 //	=====================================================	
 	
 //	댓글 리스트 조회 서비스

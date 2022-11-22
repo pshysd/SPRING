@@ -75,4 +75,22 @@
 		property: setter 주입
 		constructor-arg: 생성자 주입
 	-->
+	
+		<!-- 파일업로드 관련 bean 등록 -->
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		
+		<!-- defaultEncoding : 업로드되는 파일에 대한 인코딩 처리를 어떻게 할건지를 지정 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		
+		<!-- 
+			maxUploadSize : 한번에 업로드되는 파일의 총 용량
+			- 총 파일의 최대 용량은 10MByte로 지정
+			  10MByte == 10 * 1024 * 1024 Byte
+			    단, xml에서는 계산식이 적용되지 않으므로 직접 계산한 결과를 넣어야함
+			  10MByte == 10,485,760 => 대략 10,000,000
+		 -->
+		<property name="maxUploadSize" value="10000000" />
+		<!-- maxInMemorySize : 메모리 상의 파일 최대 용량 -->
+		<property name="maxInMemorySize" value="10000000" />
+	</bean>
 </beans>

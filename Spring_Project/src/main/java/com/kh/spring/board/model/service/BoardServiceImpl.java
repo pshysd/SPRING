@@ -34,32 +34,38 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int increaseCount(int boardNo) {
-		return 0;
+		return bDao.increaseCount(sqlSession, boardNo);
 	}
 
 	@Override
-	public Board selectboard(int boardNo) {
-		return null;
+	public Board selectBoard(int boardNo) {
+		
+		return bDao.selectBoard(sqlSession,boardNo);
 	}
 
 	@Override
 	public int deleteBoard(int boardNo) {
-		return 0;
+		return bDao.deleteBoard(sqlSession,boardNo);
 	}
 
 	@Override
-	public int updateBoard(int boardNo) {
-		return 0;
+	public int updateBoard(Board b) {
+		return bDao.updateBoard(sqlSession, b);
 	}
 
 	@Override
 	public ArrayList<Reply> selectReply(int boardNo) {
-		return null;
+		return bDao.selectReply(sqlSession, boardNo);
 	}
 
 	@Override
 	public int insertReply(Reply r) {
-		return 0;
+		return bDao.insertReply(sqlSession, r);
+	}
+
+	@Override
+	public int insertBoard(Board b) {
+		return bDao.insertBoard(sqlSession, b);
 	}
 
 }

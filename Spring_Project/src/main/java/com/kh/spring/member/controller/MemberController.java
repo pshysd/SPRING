@@ -179,7 +179,7 @@ public class MemberController {
 
 	@RequestMapping("login.me")
 	public ModelAndView loginMember(Member m, ModelAndView mv, HttpSession session) {
-
+		
 //		암호화 작업 후 로직
 //		-> BCrypt 방식에 의해 복호화가 불가능한 암호문 형태의 비밀번호와 일치하는지 대조작업
 //		Member m의 userId 필드: 사용자가 입력한 아이디 (평문)
@@ -187,7 +187,7 @@ public class MemberController {
 		Member loginUser = mService.loginMember(m);
 //		loginUser: 오로지 아이디만 가지고 조회된 회원의 정보
 //		Member loginUser의 userPwd 필드: DB에 기록된 암호화된 비밀번호
-
+		
 //		BCryptPasswordEncoder 객체의 matches 메소드
 //		matches(평문, 암호문)을 작성하면 내부적으로 평문과 암호문을 맞추는 작업이 이루어짐
 //		두 구문이 일치하는지 비교 후 일치하면 true 반환
@@ -233,7 +233,7 @@ public class MemberController {
 	@RequestMapping("logout.me")
 	public String logoutMember(HttpSession session) {
 
-		session.invalidate();
+		session.removeAttribute("loginUser");
 
 		return "redirect:/";
 	}
@@ -270,7 +270,7 @@ public class MemberController {
 //		2) BCryptPasswordEncoder 클래스를 xml 파일에 bean 등록
 //		3) web.xml에 spring-security.xml 파일을 로딩할 수 있게 등록
 
-		String encPwd = bcryptPasswordEncoder.encode("암호문: " + m.getUserPwd());
+		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 //		-> 같은 평문이여도 매번 다른 암호문 결과가 나옴
 //		-> 평문 + salt(랜덤값) -> 암호화 작업이 이루어지기 때문
 
