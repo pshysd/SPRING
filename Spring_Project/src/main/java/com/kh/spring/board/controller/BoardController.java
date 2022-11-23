@@ -237,7 +237,7 @@ public class BoardController {
 			System.out.println(b);
 //			b의 boardNo: 내가 수정하고자 하느 게시글의 번호 (WHERE) 
 //			b의 boardTitle: 수정할 제목 (SET)
-//			b의 boardCOntent: 수정할 내용 (
+//			b의 boardContent: 수정할 내용
 //			b의 originName: 기존 첨부파일의 원본명
 //			b의 changeName: 기존 첨부파일의 수정명
 			

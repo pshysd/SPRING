@@ -41,7 +41,7 @@
 	
 	<!--
 		* 순수 마이바티스의 경우 명령을 실행하기 위해 SqlSession 객체가 필요했지만
-		Spring에서의 마이바티스 연동시에는 명령을 실행하기 위해 SqlSessioNTemplate 객체가 필요함
+		Spring에서의 마이바티스 연동시에는 명령을 실행하기 위해 SqlSessionTemplate 객체가 필요함
 		-> SqlSessionFactoryBean 객체를 통해 생성해야 함
 	-->
 	
