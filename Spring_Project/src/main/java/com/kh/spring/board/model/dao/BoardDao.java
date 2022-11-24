@@ -46,7 +46,7 @@ public class BoardDao {
 	}
 
 	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
-		return 0;
+		return sqlSession.delete("boardMapper.updateBoard", b);
 	}
 
 	public ArrayList<Reply> selectReply(SqlSessionTemplate sqlSession, int boardNo) {

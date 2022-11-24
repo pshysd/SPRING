@@ -230,31 +230,64 @@ public class BoardController {
 	@RequestMapping("update.bo")
 	public String updateBoard(Board b, MultipartFile reupfile, HttpSession session, Model model) {
 
-		
 //		새로 넘어온 첨부파일이 있을 경우
-		if(!reupfile.getOriginalFilename().equals("")) {
-		
+		if (!reupfile.getOriginalFilename().equals("")) {
+
 			System.out.println(b);
 //			b의 boardNo: 내가 수정하고자 하느 게시글의 번호 (WHERE) 
 //			b의 boardTitle: 수정할 제목 (SET)
 //			b의 boardContent: 수정할 내용
 //			b의 originName: 기존 첨부파일의 원본명
 //			b의 changeName: 기존 첨부파일의 수정명
-			
+
 //			1-1. 기존 첨부파일이 있었을 경우 -> 기존 첨부파일을 찾아서 삭제
-			if(b.getOriginName() != null) {
+			if (b.getOriginName() != null) {
 				String realPath = session.getServletContext().getRealPath(b.getChangeName());
 				new File(realPath).delete();
 			}
-			
+
 //			1-2. 새로 넘어온 첨부파일을 서버에 업로드
 			String changeName = saveFile(reupfile, session);
-			
+
 //			1-3. b 객체에 새로 넘어온 첨부파일에 대한 원본명, 수정명을 필드에 담기
 			b.setOriginName(reupfile.getOriginalFilename());
-			b.setChangeName("resources/uploadFiles/"+changeName);
+			b.setChangeName("resources/uploadFiles/" + changeName);
+
+			/*
+			 * b 에 무조건 담겨있는 내용 boardNo, boardTitle, boardContent
+			 * 
+			 * 추가적으로 고려해야할 경우의 수 1. 새로 첨부된 파일 X, 기존 첨부파일 X -> originName : null, changeName
+			 * : null
+			 * 
+			 * 2. 새로 첨부된 파일 X, 기존 첨부파일 O -> originName : 기존 첨부파일의 원본명 changeName : 기존 첨부파일의
+			 * 수정명 + 파일경로
+			 * 
+			 * 3. 새로 첨부된 파일 O, 기존 첨부파일 X -> originName : 새로 첨부된 파일의 원본명 changeName : 새로 첨부된
+			 * 파일의 수정명 + 파일경로
+			 * 
+			 * 4. 새로 첨부된 파일 O, 기존 첨부파일 O -> 기존의 파일 삭제 -> 새로이 전달된 파일을 서버에 업로드 -> originName :
+			 * 새로 첨부된 파일의 원본명 changeName : 새로 첨부된 파일의 수정명 + 파일경로
+			 * 
+			 */
+
+//			Service 단으로 b 보내기
+			int result = bService.updateBoard(b);
+
+			if (result > 0) { // 게시글 수정 성공
+
+				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+
+//			게시글 상세보기 페이지로 url 재요청
+				return "redirect:/detail.bo?bno=" + b.getBoardNo();
+
+			} else { // 게시글 수정 실패
+
+				model.addAttribute("errorMsg", "게시글 수정 실패");
+
+				return "common/errorPage";
+
+			}
 		}
-		
-		return "";
+		return "redirect:/list.bo";
 	}
 }

@@ -39,7 +39,35 @@
                 <div class="form-group">
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="ID를 입력해주세요" name="userId" required> <br>
+                    <div id="checkResult" style="font-size : 0.8em; display:none;"></div>
+                    
+                    <br>
 
+                    <script>
+
+                        $(() => {
+                            // 아이디를 입력받는 input 요소 객체를 변수에 담아두기 -> keyup 이벤트 걸기
+                            const idInput = document.querySelector('.form-group>#userId');
+                            $(idInput).keyup(() => {
+
+                                // 우선 최소 5글자 이상으로 아이디 값이 입력되어 있을 때만 ajax 요청
+                                if(idInput.value.length >= 5){
+                                    // ajax를 요청하여 중복체크
+                                    $.ajax({
+                                        url: ('idCheck.me'),
+                                        data: {checkId: idInput.value},
+                                        success: (res) => {
+
+                                        },
+                                        error: () => {
+
+                                        }
+                                    })
+                                }
+                            });
+                        })
+                        
+                    </script>
                     <label for="userPwd">* Password : </label>
                     <input type="password" class="form-control" id="userPwd" placeholder="비밀번호를 입력해주세요" name="userPwd" required> <br>
 
@@ -69,7 +97,7 @@
                 </div> 
                 <br>
                 <div class="btns" align="center">
-                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="submit" class="btn btn-primary" disabled>회원가입</button>
                     <button type="reset" class="btn btn-danger">초기화</button>
                 </div>
             </form>
