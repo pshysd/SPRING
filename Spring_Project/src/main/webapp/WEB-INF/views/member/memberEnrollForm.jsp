@@ -57,12 +57,24 @@
                                         url: ('idCheck.me'),
                                         data: {checkId: idInput.value},
                                         success: (res) => {
+                                            if(res === 'NNNNN'){
+                                                $('#checkResult').show();
+                                                $('#checkResult').css('color','red').text("사용 불가능한 아이디입니다.");
+                                                $('#enrollForm button[type=submit]').attr('disabled', true);
+                                            }else{
+                                                $('#checkResult').show();
+                                                $('#checkResult').css('color','green').text("사용 가능한 아이디입니다.");
+                                                $('#enrollForm button[type=submit]').attr('disabled', false);
+                                            }
 
                                         },
                                         error: () => {
-
+                                            console.log('아이디 중복 체크용 ajax 통신 실패');
                                         }
                                     })
+                                }else{ // 5글자 미만일 경우 -> 버튼 비활성화, 메시지 내용 숨기기
+                                    $('#enrollForm button[type=submit]').attr('disabled', true);
+                                    $('#checkResult').hide();
                                 }
                             });
                         })
