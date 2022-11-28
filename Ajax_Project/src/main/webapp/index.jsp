@@ -90,5 +90,54 @@
             })
         })
     </script>
+    
+    <hr>
+    
+    <h3>3. 조회요청 후 조회된 회원 리스트를 응답받아서 출력해보기</h3>
+    
+    <button onclick="test3();">회원 전체조회</button>
+    <br><br>
+    
+    <table border="1" id="result3">
+    	<thead>
+    		<tr>
+    			<th>아이디</th>
+    			<th>이름</th>
+    			<th>나이</th>
+    			<th>전화번호</th>
+    		</tr>
+    	</thead>
+        <tbody></tbody>
+    </table>
+    
+    <script>
+        function test3() {
+            
+            $.ajax({
+                url: 'ajax3.do',
+                success: (res) => {
+
+                    console.log(res);
+                    
+                    let resultStr = '';
+
+                    for(let i=0; i<res.length; i++){
+                        resultStr += '<tr>'
+                                        + '<td>'+res[i].userId+'</td>'
+                                        + '<td>'+res[i].userName+'</td>'
+                                        + '<td>'+res[i].age+'</td>'
+                                        + '<td>'+res[i].phone+'</td>'
+                                    +'</tr>';
+                    }
+
+                    $('#result3>tbody').html(resultStr);
+                },
+
+                error: () => {
+                    console.log('ajax 통신 실패');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

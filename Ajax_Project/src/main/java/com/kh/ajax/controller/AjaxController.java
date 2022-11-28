@@ -1,5 +1,8 @@
 package com.kh.ajax.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -149,5 +152,20 @@ public class AjaxController {
 		
 		return gson.toJson(m); // {userId: "user01", userName: "홍길동", ...}
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="ajax3.do", produces="application/json; charset=utf-8")
+	public String ajaxMethod3() {
+		
+		// DB를 통해서 모든 회원의 정보를 조회했다는 가정하에 ArrayList 생성
+		List<Member> list = new ArrayList<Member>(); // JDK 1.6버전은 객체생성 부분에도 제네을 명시해야함
+		
+		list.add(new Member("user01", "pass01", "홍길동", 20, "01011112222"));
+		list.add(new Member("user02", "pass02", "김말똥", 30, "01022223333"));
+		list.add(new Member("user03", "pass03", "박개순", 25, "01099998888"));
+		list.add(new Member("user04", "pass04", "이말순", 50, "01088887777"));
+		
+		return new Gson().toJson(list);
 	}
 }

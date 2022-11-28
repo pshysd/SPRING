@@ -39,7 +39,6 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public Board selectBoard(int boardNo) {
-		
 		return bDao.selectBoard(sqlSession,boardNo);
 	}
 
@@ -54,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public ArrayList<Reply> selectReply(int boardNo) {
+	public ArrayList<Reply> selectReplyList(int boardNo) {
 		return bDao.selectReply(sqlSession, boardNo);
 	}
 

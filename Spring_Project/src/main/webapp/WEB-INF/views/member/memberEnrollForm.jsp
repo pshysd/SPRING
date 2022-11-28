@@ -35,7 +35,7 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="insert.me" method="post">
+            <form action="insert.me" method="post" id="enrollForm">
                 <div class="form-group">
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="ID를 입력해주세요" name="userId" required> <br>

@@ -219,6 +219,23 @@
 		    <artifactId>commons-io</artifactId>
 		    <version>2.11.0</version>
 		</dependency>
+		
+		<!--  5. Ajax 관련 두 개의 라이브러리  -->
+		
+		<!-- JSON -->
+		<dependency>
+		   <groupId>com.googlecode.json-simple</groupId>
+		   <artifactId>json-simple</artifactId>
+		   <version>1.1.1</version>
+		</dependency>
+		
+		<!-- GSON -->
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.10</version>
+		</dependency>
+		
 	</dependencies>
 	
 	<!-- 

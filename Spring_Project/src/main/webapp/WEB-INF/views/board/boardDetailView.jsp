@@ -84,38 +84,93 @@
             <table id="replyArea" class="table" align="center">
                 <thead>
                     <tr>
-                        <th colspan="2">
-                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
-                        </th>
-                        <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th>
+                        <c:choose>
+                            <c:when test="${empty loginUser}"> <!-- 로그인 전 -->
+                                    <th colspan="2">
+                                        <textarea class="form-control" id="content" cols="55" rows="2" style="resize:none; width:100%;" readonly>로그인한 사용자만 이용 가능한 서비스입니다. 로그인 후 이용 바랍니다.</textarea>
+                                    </th>
+                                 <th style="vertical-align:middle">
+                                    <button class="btn btn-secondary" disabled>등록하기</button>
+                                </th>
+                            </c:when>
+                            <c:otherwise> <!-- 로그인 후 -->
+                                <th colspan="2">
+                                    <textarea class="form-control" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
+                                </th>
+                                <th style="vertical-align:middle">
+                                    <button class="btn btn-secondary" onclick="addReply();">등록하기</button>
+                                </th>
+                            </c:otherwise>
+                        </c:choose>
+                    </tr>
                     </tr>
                     <tr>
-                        <td colspan="3">댓글(<span id="rcount">3</span>)</td>
+                        <td colspan="3">댓글(<span id="rcount">0</span>)</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ꿀잼</td>
-                        <td>2020-03-12</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>재밌어요</td>
-                        <td>2020-03-11</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다!!</td>
-                        <td>2020-03-10</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
         <br><br>
 
     </div>
-    
+    <script>
+        $(() => {
+            selectReplyList();
+        });
+
+        const selectReplyList = () => {
+            $.ajax({
+                url: 'rlist.bo',
+                data: {bno: ${b.boardNo}},
+
+                success: (res) => {
+                    // console.log(res);
+
+                    let resultStr = '';
+
+                    res.forEach(el => {
+                        resultStr += '<tr>'
+                                        +'<td>'+ el.replyWriter +'</td>'
+                                        +'<td>'+ el.replyContent +'</td>'
+                                        +'<td>'+ el.createDate +'</td>'
+                                    +'</tr>'
+                    });
+                    $('#replyArea>tbody').html(resultStr);
+
+                    $('#rcount').text(res.length);
+                },
+
+                error: () => {
+                    console.log('AJAX 통신 처리 에러');
+                }
+            })
+        };
+
+        const addReply = () => {
+            // required 속성은 form 태그 내에서만 유효하다.
+            if($('#content').val().trim().length !== 0){
+                $.ajax({
+                    
+                    url: 'rinsert.bo',
+                    data: {refBno: ${b.boardNo},
+                           replyWriter:'${loginUser.userId}',
+                           replyContent: $('#content').val()}, // ajax 요청 또한 커맨드객체방식 가능 (키값을 필드명과 맞춰준다.)
+                    success: () => {
+                        
+                    },
+
+                    error: () => {
+                        console.log('댓글 작성 요청 실패');
+                    }
+                });
+            }else{
+                alertify.alert('댓글 작성 실패','한 글자 이상 들어가야 합니다.');
+                $('#content').focus();
+            }
+        }
+    </script>
     <jsp:include page="../common/footer.jsp" />
     
 </body>

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,11 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 import com.kh.spring.common.template.Pagination;
 
@@ -290,4 +294,21 @@ public class BoardController {
 		}
 		return "redirect:/list.bo";
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "rlist.bo", produces = "application/json; charset=utf-8")
+	public String ajaxSelectReplyList(int bno) {
+//		System.out.println(bno);
+
+		List<Reply> list = bService.selectReplyList(bno);
+
+		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="rinsert.bo", produces="application/json; charset=utf-8")
+	public void ajaxInsertReply(Reply r) {
+		System.out.println(r);
+	}
+	
 }
