@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.kh.ajax.model.vo.Member;
 
 @Controller
@@ -142,8 +143,11 @@ public class AjaxController {
 	@RequestMapping(value="ajax2.do", produces="application/json; charset=utf-8")
 	public String ajaxMethod2() {
 		
+		Gson gson = new Gson();
+		
 		Member m = new Member("user01", "pass01", "홍길동", 20, "01011112222");
 		
+		return gson.toJson(m); // {userId: "user01", userName: "홍길동", ...}
 		
 	}
 }
