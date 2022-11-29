@@ -67,6 +67,16 @@
 		</dependency>	
 		
 		<!-- Logging -->
+		<!--
+			* Logging
+			- 서버에서 필요에 의해 기록을 남기는 행위
+			- 기록할 수 있는 곳: 파일, 콘솔창, 이메일 등...
+			
+			* Logger
+			- 필요에 의한 로깅을 자유자재로 수행하는 도구
+			- 종류: Log4j, Logback, ...
+			-> Spring에서는 Logging 기술을 통합하여 Slf4j로 관리한다.
+		-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

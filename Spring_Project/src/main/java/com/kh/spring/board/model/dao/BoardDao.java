@@ -54,7 +54,7 @@ public class BoardDao {
 	}
 
 	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
-		return sqlSession.insert("replyMapper.insertReply", r);
+		return sqlSession.insert("boardMapper.insertReply", r);
 	}
 
 
