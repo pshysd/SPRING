@@ -157,8 +157,15 @@
                     data: {refBno: ${b.boardNo},
                            replyWriter:'${loginUser.userId}',
                            replyContent: $('#content').val()}, // ajax 요청 또한 커맨드객체방식 가능 (키값을 필드명과 맞춰준다.)
-                    success: () => {
-                        
+                    success: (res) => {
+                        console.log(res)
+                        if(res === "success"){
+                            // 댓글 작성 성공 시 새로이 댓글 리스트를 불러올 것
+                            selectReplyList();
+
+                            // 댓글 작성 창 초기화 효과
+                            $('#content').val('');
+                        }
                     },
 
                     error: () => {

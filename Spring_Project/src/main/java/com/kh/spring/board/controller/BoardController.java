@@ -306,9 +306,13 @@ public class BoardController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="rinsert.bo", produces="application/json; charset=utf-8")
-	public void ajaxInsertReply(Reply r) {
-		System.out.println(r);
+	@RequestMapping(value="rinsert.bo", produces="text/html; charset=utf-8")
+	public String ajaxInsertReply(Reply r) {
+//		System.out.println(r)
+
+		int result = bService.insertReply(r);
+		
+		return result > 0 ? "success" : "fail";
 	}
 	
 }

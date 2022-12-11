@@ -1,21 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+
+<!-- 
+	* log4j.xml 파일
+	- log4j 프레임워크의 환경설정 파일
+	
+	1. log4j의 메시지 레벨
+	-> log4j에서는 기록되는 메시지의 중요도를 매긴다. (6단계까지 존재,
+													   6단계로 갈 수록 중요,
+													   1단계로 갈수록 빈도 상승)
+	- 1단계: TRACE
+			 프로그램 내에서 발생하는 모든 사소한 작업들을 기록하는 수준
+			 (너무 사소하다보니 개발자가 쓰는 단계가 아님)
+			 
+	- 2단계: DEBUG
+			 개발할 때 필요에 의해서 확인해야 할 부분에 대한 기록
+			 배포할 때에는 필요가 없는 수준(말 그대로 개발자가 개발중에 오류를 찾기 위해 사용)
+			 
+	- 3단계: INFO
+			 프로그램 입장에서 사용자에게 알려줘야 할 정보에 대한 기록을 남기는 수준
+			 배포 후에도 필요한 수준
+			 
+	- 4단계: WARN
+			 실행은 되지만 문제가 생길 소지가 있을 경우의 기록을 남기는 수준
+			 
+	- 5단계: ERROR
+			 어떠한 문제에 의해 프로그램 자체가 실행이 안되는 경우의 기록을 남기는 수준
+			 
+	- 6단계: FATAL
+			 시스템에 치명적인 오류에 대한 기록을 남기는 수준
+			 (너무 중요한 나머지 개발자가 쓸 수 없게 막아둠)
+	
+	2. 설정 태그와 역할
+	- logger 태그: 로깅을 수행하기 위한 도구(Logger)에 대한 설정
+	- root 태그: 전반적인 로깅 설정(logger 태그에서 설정하고 남은 것들에 대한 로깅 설정)
+	- appender 태그: 로깅을 어디에 할 건지 설정하는 도구, 여러 개 지정 가능
+	
+	3. 사용 가능한 appender
+	- ConsoleAppender: 콘솔에 로그를 출력하는 도구
+	- FileAppender: 파일에 로그를 출력하는 도구
+	- DailyRollingFileAppender: 날짜별로 파일에 로그를 출력하는 도구
+	- RollingFileAppender: 용량별로 구분해서 파일에 로그를 출력하는 도구
+-->
+
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<!-- Appenders -->
+	<!-- 기본 생성 appender: 콘솔에 출력하는 도구 -->
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+	
+		<!-- 내부적으로 System.out과 같은 역할을 수행하겠다. -->
 		<param name="Target" value="System.out" />
+		
+		<!--
+			로그 메시지를
+			%-5p : %c                      - %m        %n
+			INFO : com.kh.spring.TestClass - 난 info야
+			형식으로 출력하겠다. (커스터마이징 가능)
+			
+			* 메시지 레이아웃
+			- %p: 메시지 레벨(priority), -5는 해당 메시지 레벨을 5칸 왼쪽에다가 찍겠다 라는 뜻
+			- %c: 카테고리 정보(category), 로깅이 발생한 대상의 정보(풀 클래스명)
+			- %m: 메시지 내용 (message), 실제 로깅 메시지 정보
+			- %n: 개행문자
+			- %d: 시간 정보, SimpleDateFormat 형식 그대로 사용 ({} 안에다가 커스터마이징 가능)
+		-->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+			<param name="ConversionPattern" value="%-5p: %c - %m(%d{yyyy-MM-dd HH:mm:ss})%n" />
 		</layout>
 	</appender>
 	
+	<!-- 파일로 로그 출력 도구(.xml)-->
+	<appender name="xml" class="org.apache.log4j.FileAppender">
+		<!-- 파일명 (파일명만 쓴 경우 상대경로에 의해 지금 내가 작업중인 프로젝트 폴더 내부에 파일이 곧바로 생성됨 -->
+		<param name="file" value="log.xml" />
+		<!-- 이어쓰기를 하겠다. (true일 경우 이어쓰기, false일 경우 덮어쓰기)-->
+		<param name="append" value="true" />
+		<!-- xml 파일일 경우 log4j에서 기본적인 레이아웃 양식을 제공 -->
+		<layout class="org.apache.log4j.xml.XMLLayout" />
+	</appender>
+	
+	<!-- 파일 출력 도구 (.out) -->
+	<appender name="out" class="org.apache.log4j.FileAppender">
+		<param name="file" value="log.out"/>
+		<param name="append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%-5p: %c - %m(%d{yyyy-MM-dd HH:mm:ss})%n"/>
+		</layout>
+	</appender>
+	
+	<!-- 날짜별로 파일이 바뀌는 도구(.log) -->
+	<appender name="daily" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="C:/mylog/daily"/>
+		<param name="append" value="true"/>
+		<!-- 파일명에 해당하는 날짜 패턴 -->
+		<param name="DatePattern" value="'_'yyyy-MM-dd'.log'" /> <!-- "daily_yyyy-MM-dd.log" 형태로 저장됨 -->
+		<!-- 파일 내용에 해당하는 날짜 패턴 -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m(%d{yyyy-MM-dd HH:mm:ss})%n" />
+		</layout>
+	</appender>
 	<!-- Application Loggers -->
+	<!--
+		내가 만든 프로그램에 대한 로거 설정
+		com.kh.spring 패키지 내에서의 모든 로깅은 info 레벨부터 출력하겠다.
+	-->
+	
+
 	<logger name="com.kh.spring">
-		<level value="info" />
+		<level value="info" /> <!-- level 태그에 명시된 수준 이상부터 로깅이 됨 -->
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
+	<!--
+		제 3자(남이 만든 프로그램: spring framework)에 대한 로깅을 어느 수준부터 할 것인지에 대한 설정
+	-->
 	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>	
@@ -33,9 +132,19 @@
 	</logger>
 
 	<!-- Root Logger -->
+	<!--
+		전반적인 로깅 설정
+		위에서 설정된 내용 이외의 것들에 대한 모든 로깅 설정
+	-->
 	<root>
+		<!--
+			전체적으로 info 레벨 이상만 로깅을 하겠다.
+			(개발 시에는 debug 수준으로 변경 후 디버깅 작업 진행, 배포 시에는 info로 바꾸기) 
+		-->
 		<priority value="info" />
-		<appender-ref ref="console" />
+		<!-- 로깅된 내용을 콘솔에 찍겠다. -->
+		<appender-ref ref="daily" />
+		<appender-ref ref="console" /> <!-- 원하는 만큼 appender 추가 가능 -->
 	</root>
 	
 </log4j:configuration>

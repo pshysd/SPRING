@@ -86,4 +86,14 @@
 		 :스프링컨테이너(Spring Container)
 		 -> Spring에 의해 생성된 객체들은 Spring Container에 담겨있다.
 	-->
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/myPage.me"/>
+			<mapping path="/enrollForm.bo"/>
+			<mapping path="/update.me"/>
+			
+			<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor" id="loginInterceptor"/>
+		</interceptor>
+	</interceptors>
 </beans:beans>
