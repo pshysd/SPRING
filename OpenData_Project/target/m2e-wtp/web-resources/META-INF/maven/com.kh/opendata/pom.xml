@@ -115,9 +115,9 @@
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>       
 		
-		<!-- JSON을 VO로 파싱하기 위한 GSON 라이브러리 추가 --> 
+		<!-- JSON 을 VO 로 파싱하기 위한 gson 라이브러리 추가 -->
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
